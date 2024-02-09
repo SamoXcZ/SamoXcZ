@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+  <style>
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /**
+     * `@property` is required for the animation to work.
+     * Without it, the angle values won’t interpolate properly.
+     *
+     * @see https://dev.to/afif/we-can-finally-animate-css-gradient-kdk
+     */
+    @property --bg-angle {
+      inherits: false;
+      initial-value: 0deg;
+      syntax: "<angle>";
+    }
+
+    /**
+     * To animate the gradient, we set the custom property to 1 full
+     * rotation. The animation starts at the default value of `0deg`.
+     */
+    @keyframes spin {
+      to {
+        --bg-angle: 360deg;
+      }
+    }
+
+    article {
+      /* add the animation, remove hover requirement, and add fade-in effect */
+      animation: spin 2.5s infinite linear, fadeIn 1s ease-out;
+
+      /**
+       * Using `background-origin` we can create a “border” using two gradients. And to
+       * make the gradients better-looking, we use OKLCH.
+       *
+       * @see https://developer.mozilla.org/en-US/docs/Web/CSS/background-origin
+       * @see https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl
+       */
+      background:
+        /* Background colors don’t work with `background-origin`, so use a gradient. */
+        linear-gradient(
+          to bottom,
+          oklch(0.1 0.2 240 / 0.95),
+          oklch(0.1 0.2 240 / 0.95)
+        ) padding-box, /* ends at inner border edges */
+        conic-gradient(
+          from var(--bg-angle) in oklch longer hue,
+          oklch(0.85 0.37 0) 0 0
+        ) border-box; /* extends to outer border edges */
+
+      /* a clear border lets the background gradient shine through */
+      border: 6px solid transparent;
+      border-radius: 1rem;
+      box-shadow: 0.125rem 0.25rem 0.25rem 0.5rem oklch(0.1 0.37 315 / 0.25);
+      color: white;
+      padding: 1rem;
+      width: min(400px, 90vw);
+      position: relative; /* Add relative positioning to position icons */
+
+      & h1 {
+        line-height: 1.1;
+        margin: 0;
+      }
+
+      & p {
+        margin: 0.75rem 0 0;
+      }
+    }
+
+    .icon-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      width: 200px; /* Adjust the width as needed */
+      animation: spin 2.5s infinite linear, fadeIn 1s ease-out; /* Add animation to the container */
+    }
+
+    .icon {
+      /* style similar to the article element */
+      background:
+        linear-gradient(
+          to bottom,
+          oklch(0.1 0.2 240 / 0.95),
+          oklch(0.1 0.2 240 / 0.95)
+        ) padding-box, /* ends at inner border edges */
+        conic-gradient(
+          from var(--bg-angle) in oklch longer hue,
+          oklch(0.85 0.37 0) 0 0
+        ) border-box; /* extends to outer border edges */
+      border: 6px solid transparent;
+      border-radius: 15px; /* Make it rounded with a radius of 15px */
+      box-shadow: 0.25rem 0.5rem 0.5rem 1rem oklch(0.1 0.37 315 / 0.25); /* Make it a little fatter */
+      cursor: pointer;
+      padding: 0.5rem; /* Adjust padding to provide more space for icons */
+      text-align: center;
+      width: 60px; /* Adjust width as needed */
+    }
+
+    .icon:hover {
+      /* unpause the animation on hover */
+      animation-play-state: running;
+    }
+
+    /******************************************************************
+     * Other styles to make the demo look nice
+     ******************************************************************/
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+        Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    body {
+      margin: 0;
+    }
+
+    main {
+      background:
+        radial-gradient(
+          circle,
+          oklch(0.15 0.2 330 / 0),
+          oklch(0.15 0.2 330 / 1)
+        ),
+        linear-gradient(
+          344deg in oklch,
+          oklch(0.3 0.37 310),
+          oklch(0.35 0.37 330),
+          oklch(0.3 0.37 310)
+        );
+      display: grid;
+      height: 100vh;
+      place-items: center;
+      /* add the animation and fade-in effect to main */
+      animation: fadeIn 1s ease-out;
+    }
+
+    .button-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+    }
+
+    .button {
+      /* add the animation to the button */
+      animation: spin 2.5s infinite linear, fadeIn 1s ease-out;
+
+      /* style similar to the article element */
+      background:
+        linear-gradient(
+          to bottom,
+          oklch(0.1 0.2 240 / 0.95),
+          oklch(0.1 0.2 240 / 0.95)
+        ) padding-box, /* ends at inner border edges */
+        conic-gradient(
+          from var(--bg-angle) in oklch longer hue,
+          oklch(0.85 0.37 0) 0 0
+        ) border-box; /* extends to outer border edges */
+      border: 6px solid transparent;
+      border-radius: 1rem;
+      box-shadow: 0.125rem 0.25rem 0.25rem 0.5rem oklch(0.1 0.37 315 / 0.25);
+      color: white;
+      padding: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .button:hover {
+      /* unpause the animation on hover */
+      animation-play-state: running;
+    }
+
+    article:hover {
+      /* unpause the animation on hover */
+      animation-play-state: running;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <article>
+      <h1>SamoXcZ Website!</h1>
+      <p>
+        I'm glad we've met. Let me introduce myself. I'm a guy who enjoys making iOS apps and designing websites/apps as well. I live in Europe, and ever since I bought my first iPhone, I've been intrigued by how apps/games work. I've always dreamed of creating my own app and game as well. Thank you so much for visiting my website!
+      </p>
+      <div class="icon-container">
+        <div class="icon">
+          <a href="https://x.com/SamoXcZ?s=20" target="_blank">
+            <i class="fab fa-twitter" style="color: white;"></i>
+          </a>
+        </div>
+        <div class="icon">
+          <a href="https://github.com/SamoXcZ" target="_blank">
+            <i class="fab fa-github" style="color: white;"></i>
+          </a>
+        </div>
+        <div class="icon">
+          <a href="https://t.me/@Samo_Dev" target="_blank">
+            <i class="fab fa-telegram" style="color: white;"></i>
+          </a>
+        </div>
+      </div>
+    </article>
+    <div class="button-container">
+      <a href="page2.html" class="button">Next</a>
+    </div>
+  </main>
+</body>
+
+</html>
